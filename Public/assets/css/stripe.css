@@ -1,0 +1,93 @@
+/* Stripe Payment Pages Styles */
+
+.payment-success-container,
+.payment-cancel-container {
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 40px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.success-icon,
+.cancel-icon {
+    font-size: 5rem;
+    margin-bottom: 20px;
+}
+
+.payment-success-container h1 {
+    color: #27ae60;
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.payment-cancel-container h1 {
+    color: #e74c3c;
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.payment-success-container p,
+.payment-cancel-container p {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+}
+
+.success-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-return {
+    display: inline-block;
+    background: #3498db;
+    color: #ffffff;
+    padding: 12px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-return:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+}
+
+.btn-browse {
+    display: inline-block;
+    background: #27ae60;
+    color: #ffffff;
+    padding: 12px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-browse:hover {
+    background: #219150;
+    transform: translateY(-2px);
+}
+
+.btn-reservations {
+    display: inline-block;
+    background: #95a5a6;
+    color: #ffffff;
+    padding: 12px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-left: 10px;
+}
+
+.btn-reservations:hover {
+    background: #7f8c8d;
+    transform: translateY(-2px);
+}
