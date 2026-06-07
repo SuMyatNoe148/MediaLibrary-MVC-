@@ -3,6 +3,7 @@
 namespace MediaLibrary\Presentation\Controllers;
 
 use MediaLibrary\Application\Services\ReservationService;
+use PDO;
 
 /**
  * Handles reservation-related actions
@@ -71,6 +72,37 @@ class ReservationController
                 );
 
                 if ($result['success']) {
+                    // Send notification to admin
+                    try {
+                        $notificationService = new \MediaLibrary\Application\Services\NotificationService();
+                        
+                        // Get admin user (first admin user)
+                        $db = \Database::getConnection();
+                        $stmt = $db->query("SELECT user_id FROM Users WHERE is_admin = 1 LIMIT 1");
+                        $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+                        
+                        error_log("Reservation created - Admin query result: " . ($admin ? "Found admin ID {$admin['user_id']}" : "No admin found"));
+                        
+                        if ($admin) {
+                            // Get media title
+                            $stmt = $db->prepare("SELECT title FROM Media WHERE media_id = :media_id");
+                            $stmt->execute([':media_id' => $mediaId]);
+                            $media = $stmt->fetch(PDO::FETCH_ASSOC);
+                            
+                            error_log("Reservation created - Media query result: " . ($media ? "Found media: {$media['title']}" : "No media found"));
+                            
+                            if ($media) {
+                                $notificationId = $notificationService->notifyNewReservation(
+                                    $admin['user_id'],
+                                    $_SESSION['username'],
+                                    $media['title']
+                                );
+                                error_log("Reservation created - Notification sent with ID: $notificationId");
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        error_log("Reservation creation: Admin notification failed - " . $e->getMessage());
+                    }
 
                     header('Location: index.php?page=reservations&success=1');
                     exit;

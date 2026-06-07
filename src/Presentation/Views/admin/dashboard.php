@@ -41,6 +41,16 @@
                     </div>
                 </div>
             </a>
+            <a href="index.php?page=admin-invoices" class="stat-card-link">
+                <div class="stat-card">
+                    <div class="stat-icon invoices"><?= IconHelper::dollarSign('icon') ?></div>
+                    <div class="stat-info">
+                        <h3>$<?= number_format($invoiceStats['total_revenue'], 2) ?></h3>
+                        <p>Total Revenue (<?= $invoiceStats['total_invoices'] ?> invoices)</p>
+                        <span class="stat-action">View &rarr;</span>
+                    </div>
+                </div>
+            </a>
         </div>
 
         <!-- Quick Actions -->
@@ -58,6 +68,10 @@
                 <a href="index.php?page=admin-reservations" class="admin-btn">
                     <?= IconHelper::calendar('nav-icon-small') ?>
                     Reservation Management
+                </a>
+                <a href="index.php?page=admin-invoices" class="admin-btn">
+                    <?= IconHelper::fileText('nav-icon-small') ?>
+                    Invoice Management
                 </a>
             </div>
         </div>

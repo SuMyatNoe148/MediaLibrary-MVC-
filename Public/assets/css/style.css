@@ -1,4 +1,162 @@
 /* =========================
+   NOTIFICATIONS
+   ========================= */
+
+.notification-menu {
+    position: relative;
+    margin-right: 15px;
+}
+
+.notification-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    position: relative;
+    color: #555;
+    transition: color 0.3s;
+}
+
+.notification-btn:hover {
+    color: #6366f1;
+}
+
+.notification-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #ef4444;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 16px;
+    text-align: center;
+}
+
+.notification-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 350px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: none;
+    z-index: 1000;
+    margin-top: 5px;
+}
+
+.notification-dropdown.show {
+    display: block;
+}
+
+.notification-header {
+    padding: 15px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notification-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e1b4b;
+    margin: 0;
+}
+
+.mark-read {
+    font-size: 12px;
+    color: #6366f1;
+    text-decoration: none;
+}
+
+.mark-read:hover {
+    text-decoration: underline;
+}
+
+.notification-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    padding: 15px;
+    border-bottom: 1px solid #f1f5f9;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.notification-item:hover {
+    background: #f8fafc;
+}
+
+.notification-item.unread {
+    background: #f0f9ff;
+}
+
+.notification-item.unread::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background: #6366f1;
+    border-radius: 50%;
+}
+
+.notification-title {
+    font-weight: 600;
+    color: #1e1b4b;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.notification-message {
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.notification-time {
+    color: #94a3b8;
+    font-size: 11px;
+}
+
+.notification-loading {
+    padding: 20px;
+    text-align: center;
+    color: #64748b;
+}
+
+.notification-empty {
+    padding: 20px;
+    text-align: center;
+    color: #64748b;
+}
+
+.notification-footer {
+    padding: 15px;
+    border-top: 1px solid #e2e8f0;
+    text-align: center;
+}
+
+.notification-footer a {
+    color: #6366f1;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.notification-footer a:hover {
+    text-decoration: underline;
+}
+
+/* =========================
    RESET & BASE
    ========================= */
 

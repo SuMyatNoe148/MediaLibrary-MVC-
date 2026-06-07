@@ -15,6 +15,9 @@ require_once BASE_PATH . '/src/Presentation/Views/partials/icons.php';
     <?php if (isset($_GET['page']) && strpos($_GET['page'], 'admin') === 0): ?>
     <link rel="stylesheet" href="Public/assets/css/admin.css?v=5">
     <?php endif; ?>
+    <?php if (isset($_GET['page']) && ($_GET['page'] === 'invoice-view' || $_GET['page'] === 'invoices')): ?>
+    <link rel="stylesheet" href="/ITVisionHub/media_library/Public/assets/css/invoice.css?v=1">
+    <?php endif; ?>
 </head>
 <body>
 
@@ -61,6 +64,26 @@ require_once BASE_PATH . '/src/Presentation/Views/partials/icons.php';
         <!-- USER NAVIGATION -->
         <div class="user-nav">
             <?php if (isset($_SESSION['user_id'])): ?>
+                <!-- Notification Bell -->
+                <div class="notification-menu">
+                    <button class="notification-btn" id="notificationBtn">
+                        <?= IconHelper::bell('nav-icon-small') ?>
+                        <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                    </button>
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <div class="notification-header">
+                            <h3>Notifications</h3>
+                            <a href="#" id="markAllRead" class="mark-read">Mark all as read</a>
+                        </div>
+                        <div class="notification-list" id="notificationList">
+                            <div class="notification-loading">Loading...</div>
+                        </div>
+                        <div class="notification-footer">
+                            <a href="index.php?page=notifications">View All</a>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="user-menu">
                     <a href="index.php?page=profile" class="user-link">
                         <?= IconHelper::user('nav-icon-small') ?>
@@ -70,6 +93,7 @@ require_once BASE_PATH . '/src/Presentation/Views/partials/icons.php';
                         <a href="index.php?page=profile"><?= IconHelper::settings('nav-icon-small') ?> Profile</a>
                         <?php if (empty($_SESSION['is_admin'])): ?>
                             <a href="index.php?page=reservations"><?= IconHelper::calendar('nav-icon-small') ?> Reservations</a>
+                            <a href="index.php?page=invoices"><?= IconHelper::fileText('nav-icon-small') ?> Invoices</a>
                         <?php endif; ?>
                         <?php if (!empty($_SESSION['is_admin'])): ?>
                             <hr>

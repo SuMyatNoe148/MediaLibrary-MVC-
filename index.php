@@ -24,6 +24,8 @@ use MediaLibrary\Presentation\Controllers\UserController;
 use MediaLibrary\Presentation\Controllers\AdminController;
 use MediaLibrary\Presentation\Controllers\ReservationController;
 use MediaLibrary\Presentation\Controllers\StripeController;
+use MediaLibrary\Presentation\Controllers\InvoiceController;
+use MediaLibrary\Presentation\Controllers\NotificationController;
 use MediaLibrary\Application\Services\CatalogService;
 use MediaLibrary\Application\Services\FormatService;
 
@@ -207,6 +209,11 @@ switch ($page) {
         $controller->messages();
         break;
 
+    case 'admin-invoices':
+        $controller = new AdminController();
+        $controller->invoices();
+        break;
+
     case 'stripe-checkout':
         $controller = new StripeController();
         $controller->checkout();
@@ -225,6 +232,46 @@ switch ($page) {
     case 'stripe-webhook':
         $controller = new StripeController();
         $controller->webhook();
+        break;
+
+    case 'invoices':
+        $controller = new InvoiceController();
+        $controller->index();
+        break;
+
+    case 'invoice-view':
+        $controller = new InvoiceController();
+        $controller->view();
+        break;
+
+    case 'invoice-download':
+        $controller = new InvoiceController();
+        $controller->download();
+        break;
+
+    case 'notifications':
+        $controller = new NotificationController();
+        $controller->list();
+        break;
+
+    case 'notifications-api':
+        $controller = new NotificationController();
+        $controller->index();
+        break;
+
+    case 'notification-mark-read':
+        $controller = new NotificationController();
+        $controller->markAsRead();
+        break;
+
+    case 'notification-mark-all-read':
+        $controller = new NotificationController();
+        $controller->markAllAsRead();
+        break;
+
+    case 'notification-delete':
+        $controller = new NotificationController();
+        $controller->delete();
         break;
 
     case '404':

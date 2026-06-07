@@ -4,6 +4,7 @@ namespace MediaLibrary\Presentation\Controllers;
 
 use MediaLibrary\Application\Services\ReservationService;
 use MediaLibrary\Application\Services\PaymentService;
+use MediaLibrary\Application\Services\InvoiceService;
 use MediaLibrary\Config\StripeConfig;
 
 /**
@@ -14,11 +15,13 @@ class StripeController
 {
     private ReservationService $reservationService;
     private PaymentService $paymentService;
+    private InvoiceService $invoiceService;
 
-    public function __construct(?ReservationService $reservationService = null, ?PaymentService $paymentService = null)
+    public function __construct(?ReservationService $reservationService = null, ?PaymentService $paymentService = null, ?InvoiceService $invoiceService = null)
     {
         $this->reservationService = $reservationService ?? new ReservationService();
         $this->paymentService = $paymentService ?? new PaymentService();
+        $this->invoiceService = $invoiceService ?? new InvoiceService();
     }
 
     /**
@@ -137,6 +140,39 @@ class StripeController
         $result2 = $this->reservationService->updateStatus($reservationId, 'completed');
         
         error_log("Stripe success: updatePaymentStatus result=" . ($result1 ? 'success' : 'failed') . ", updateStatus result=" . ($result2 ? 'success' : 'failed'));
+
+        // Get reservation details for invoice
+        $reservation = $this->reservationService->getReservationById($reservationId);
+        
+        if ($reservation && $result1) {
+            try {
+                // Create invoice
+                $invoiceId = $this->invoiceService->createInvoice(
+                    $reservationId,
+                    null, // payment_intent_id - can be retrieved from Stripe if needed
+                    $reservation['amount'],
+                    'USD'
+                );
+                error_log("Stripe success: Invoice created with ID=$invoiceId");
+
+                // Send notification to user
+                try {
+                    $notificationService = new \MediaLibrary\Application\Services\NotificationService();
+                    $invoice = $this->invoiceService->getInvoiceById($invoiceId);
+                    if ($invoice) {
+                        $notificationService->notifyPaymentCompleted(
+                            $reservation['user_id'],
+                            $invoice['invoice_number'],
+                            $reservation['amount']
+                        );
+                    }
+                } catch (\Exception $e) {
+                    error_log("Stripe success: Notification failed - " . $e->getMessage());
+                }
+            } catch (\Exception $e) {
+                error_log("Stripe success: Invoice creation failed - " . $e->getMessage());
+            }
+        }
 
         $pageTitle = "Payment Successful";
         $section = null;

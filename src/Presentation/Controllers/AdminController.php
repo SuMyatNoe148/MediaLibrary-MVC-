@@ -4,6 +4,7 @@ namespace MediaLibrary\Presentation\Controllers;
 
 use MediaLibrary\Application\Services\AdminService;
 use MediaLibrary\Application\Services\ReservationService;
+use MediaLibrary\Application\Services\InvoiceService;
 
 /**
  * Admin Dashboard Controller
@@ -13,8 +14,9 @@ class AdminController
 {
     private AdminService $adminService;
     private ReservationService $reservationService;
+    private InvoiceService $invoiceService;
 
-    public function __construct(?AdminService $adminService = null, ?ReservationService $reservationService = null)
+    public function __construct(?AdminService $adminService = null, ?ReservationService $reservationService = null, ?InvoiceService $invoiceService = null)
     {
         if ($adminService === null) {
             $this->adminService = new AdminService();
@@ -22,6 +24,7 @@ class AdminController
             $this->adminService = $adminService;
         }
         $this->reservationService = $reservationService ?? new ReservationService();
+        $this->invoiceService = $invoiceService ?? new InvoiceService();
     }
 
     /**
@@ -57,6 +60,13 @@ class AdminController
 
         // Get dashboard statistics
         $stats = $this->adminService->getDashboardStats();
+        
+        // Get invoice statistics
+        $invoiceStats = [
+            'total_revenue' => $this->invoiceService->getTotalRevenue(),
+            'total_invoices' => $this->invoiceService->getTotalInvoices(),
+            'monthly_revenue' => $this->invoiceService->getMonthlyRevenue()
+        ];
 
         require BASE_PATH . '/src/Presentation/Views/admin/dashboard.php';
     }
@@ -351,6 +361,28 @@ class AdminController
                 $result = $this->reservationService->updateStatus($reservationId, $status);
                 if ($result['success']) {
                     $message = $result['message'];
+                    
+                    // Send notification based on status change
+                    try {
+                        $notificationService = new \MediaLibrary\Application\Services\NotificationService();
+                        $reservation = $this->reservationService->getReservationById($reservationId);
+                        
+                        if ($reservation) {
+                            if ($status === 'confirmed') {
+                                $notificationService->notifyReservationConfirmed(
+                                    $reservation['user_id'],
+                                    $reservation['media_title']
+                                );
+                            } elseif ($status === 'cancelled') {
+                                $notificationService->notifyReservationCancelled(
+                                    $reservation['user_id'],
+                                    $reservation['media_title']
+                                );
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        error_log("Admin reservation update: Notification failed - " . $e->getMessage());
+                    }
                 } else {
                     $error = $result['error'];
                 }
@@ -384,6 +416,23 @@ class AdminController
         $messages = $this->adminService->getAllMessages();
 
         require BASE_PATH . '/src/Presentation/Views/admin/messages.php';
+    }
+
+    /**
+     * Admin Invoice Management
+     */
+    public function invoices()
+    {
+        $this->requireAdmin();
+
+        $pageTitle = "Invoice Management";
+        $section = null;
+        $hideSearch = true;
+
+        // Get all invoices
+        $invoices = $this->invoiceService->getAllInvoices();
+
+        require BASE_PATH . '/src/Presentation/Views/admin/invoices.php';
     }
 
     /**
