@@ -89,22 +89,6 @@ htdocs/
 http://localhost/media-library
 ```
 
-## 💳 Stripe Integration
-
-Configure your Stripe keys:
-
-```env
-STRIPE_SECRET_KEY=your_secret_key
-STRIPE_PUBLISHABLE_KEY=your_publishable_key
-```
-
-For local webhook testing:
-
-```bash
-ngrok http 80
-```
-
-Use the generated URL as your Stripe webhook endpoint.
 
 ## 📂 Project Structure
 
