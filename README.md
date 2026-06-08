@@ -49,7 +49,7 @@ src/
 ### Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/media-library.git
+git clone https://github.com/SuMyatNoe148/MediaLibrary-MVC.git
 cd media-library
 ```
 
