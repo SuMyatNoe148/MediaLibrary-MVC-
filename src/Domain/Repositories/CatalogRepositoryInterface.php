@@ -2,26 +2,45 @@
 
 namespace MediaLibrary\Domain\Repositories;
 
+use MediaLibrary\Domain\Entities\Media;
+use MediaLibrary\Domain\ValueObjects\MediaId;
+
 /**
- * Defines methods for retrieving catalog data from the data source.
+ * Defines methods for retrieving catalog data (DDD Repository)
  */
 interface CatalogRepositoryInterface
 {
-    // Get total catalog item count
-    public function getcatalog_count($category = null, $search = null);
+    /**
+     * Get total catalog item count
+     */
+    public function getCount(?string $category = null, ?string $search = null): int;
 
-    // Get complete catalog list
-    public function get_full_catalog($limit = null, $offset = 0);
+    /**
+     * Get complete catalog list
+     * @return Media[]
+     */
+    public function findAll(?int $limit = null, int $offset = 0): array;
 
-    // Get catalog items by category
-    public function get_category_catalog($category, $limit = null, $offset = 0);
+    /**
+     * Get catalog items by category
+     * @return Media[]
+     */
+    public function findByCategory(string $category, ?int $limit = null, int $offset = 0): array;
 
-    // Search catalog items by keyword and category
-    public function get_search_catalog($search, $category = null, $limit = null, $offset = 0);
+    /**
+     * Search catalog items by keyword and category
+     * @return Media[]
+     */
+    public function search(string $search, ?string $category = null, ?int $limit = null, int $offset = 0): array;
 
-    // Get random catalog items
-    public function get_random_catalog();
+    /**
+     * Get random catalog items
+     * @return Media[]
+     */
+    public function findRandom(): array;
 
-    // Get a single catalog item by ID
-    public function get_single_item($id);
+    /**
+     * Get a single catalog item by ID
+     */
+    public function findById(MediaId $id): ?Media;
 }

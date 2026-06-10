@@ -2,58 +2,51 @@
 
 namespace MediaLibrary\Domain\Repositories;
 
+use MediaLibrary\Domain\Entities\Reservation;
+use MediaLibrary\Domain\ValueObjects\MediaId;
+use MediaLibrary\Domain\ValueObjects\ReservationId;
+use MediaLibrary\Domain\ValueObjects\UserId;
+
 /**
- * Interface for reservation data access operations
+ * Interface for reservation data access operations (DDD Repository)
  */
 interface ReservationRepositoryInterface
 {
     /**
-     * Create a new reservation
+     * Find reservation by ID
      */
-    public function create(int $userId, int $mediaId, string $reservationDate, ?string $notes = null, ?float $amount = 0.00): int;
+    public function findById(ReservationId $reservationId): ?Reservation;
 
     /**
-     * Get reservation by ID
+     * Save reservation (create or update)
      */
-    public function findById(int $reservationId): ?array;
+    public function save(Reservation $reservation): Reservation;
 
     /**
      * Get all reservations for a user
+     * @return Reservation[]
      */
-    public function getUserReservations(int $userId): array;
-
-    /**
-     * Get filtered reservations for a user
-     */
-    public function getUserReservationsFiltered(int $userId, ?string $search = null, ?string $paymentStatus = null, ?string $reservationStatus = null): array;
+    public function findByUserId(UserId $userId): array;
 
     /**
      * Get all reservations for a media item
+     * @return Reservation[]
      */
-    public function getMediaReservations(int $mediaId): array;
+    public function findByMediaId(MediaId $mediaId): array;
 
     /**
-     * Get all reservations (admin)
+     * Get all reservations
+     * @return Reservation[]
      */
-    public function getAllReservations(): array;
-
-    /**
-     * Update reservation status
-     */
-    public function updateStatus(int $reservationId, string $status): bool;
-
-    /**
-     * Cancel a reservation
-     */
-    public function cancel(int $reservationId): bool;
+    public function findAll(): array;
 
     /**
      * Delete a reservation
      */
-    public function delete(int $reservationId): bool;
+    public function delete(ReservationId $reservationId): bool;
 
     /**
      * Check if user has reservation for media on specific date
      */
-    public function hasReservation(int $userId, int $mediaId, string $date): bool;
+    public function hasReservation(UserId $userId, MediaId $mediaId, string $date): bool;
 }

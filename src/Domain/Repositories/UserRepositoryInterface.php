@@ -2,38 +2,43 @@
 
 namespace MediaLibrary\Domain\Repositories;
 
+use MediaLibrary\Domain\Entities\User;
+use MediaLibrary\Domain\ValueObjects\Email;
+use MediaLibrary\Domain\ValueObjects\UserId;
+
 /**
- * Interface for user data access operations
+ * Interface for user data access operations (DDD Repository)
  */
 interface UserRepositoryInterface
 {
     /**
      * Find user by ID
      */
-    public function findById(int $userId): ?array;
+    public function findById(UserId $userId): ?User;
 
     /**
      * Find user by email
      */
-    public function findByEmail(string $email): ?array;
+    public function findByEmail(Email $email): ?User;
 
     /**
      * Find user by username
      */
-    public function findByUsername(string $username): ?array;
+    public function findByUsername(string $username): ?User;
 
     /**
-     * Create new user
+     * Save user (create or update)
      */
-    public function create(string $username, string $email, string $password): bool;
+    public function save(User $user): User;
 
     /**
-     * Update user password
+     * Delete user
      */
-    public function updatePassword(string $email, string $newPassword): bool;
+    public function delete(UserId $userId): bool;
 
     /**
-     * Update user profile
+     * Get all users
+     * @return User[]
      */
-    public function updateProfile(int $userId, array $data): bool;
+    public function findAll(): array;
 }
