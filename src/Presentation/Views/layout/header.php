@@ -79,7 +79,7 @@ require_once BASE_PATH . '/src/Presentation/Views/partials/icons.php';
                             <div class="notification-loading">Loading...</div>
                         </div>
                         <div class="notification-footer">
-                            <a href="index.php?page=notifications">View All</a>
+                            <a href="<?= !empty($_SESSION['is_admin']) ? 'index.php?page=admin-messages' : 'index.php?page=notifications' ?>">View All</a>
                         </div>
                     </div>
                 </div>

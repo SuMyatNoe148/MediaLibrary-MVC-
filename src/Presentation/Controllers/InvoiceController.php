@@ -100,17 +100,6 @@ class InvoiceController
             exit;
         }
 
-        // Send notification to user about PDF download
-        try {
-            $notificationService = new \MediaLibrary\Application\Services\NotificationService();
-            $notificationService->notifyInvoiceDownloaded(
-                $_SESSION['user_id'],
-                $invoice['invoice_number']
-            );
-        } catch (\Exception $e) {
-            error_log("Invoice download: Notification failed - " . $e->getMessage());
-        }
-
         // Pass invoice data to view for client-side PDF generation
         $pageTitle = "Invoice #" . $invoice['invoice_number'];
         $section = null;

@@ -92,8 +92,7 @@
                     } else {
                         notificationList.innerHTML = data.notifications.map(notif => `
                             <div class="notification-item ${notif.is_read ? '' : 'unread'}" 
-                                 onclick="handleNotificationClick(${notif.notification_id}, '${notif.link || ''}')"
-                                 style="position: relative; padding-left: ${notif.is_read ? '15px' : '25px'};">
+                                 onclick="handleNotificationClick(${notif.notification_id}, '${notif.link || ''}')">
                                 <div class="notification-title">${escapeHtml(notif.title)}</div>
                                 <div class="notification-message">${escapeHtml(notif.message)}</div>
                                 <div class="notification-time">${formatTime(notif.created_at)}</div>
