@@ -26,11 +26,11 @@ use MediaLibrary\Presentation\Controllers\ReservationController;
 use MediaLibrary\Presentation\Controllers\StripeController;
 use MediaLibrary\Presentation\Controllers\InvoiceController;
 use MediaLibrary\Presentation\Controllers\NotificationController;
-use MediaLibrary\Application\Services\CatalogService;
-use MediaLibrary\Application\Services\FormatService;
+use MediaLibrary\Catalog\Application\Services\CatalogService;
+use MediaLibrary\Catalog\Application\Services\FormatService;
 
 $dotenv = Dotenv::createImmutable(BASE_PATH);
-$dotenv->load();
+$dotenv->safeLoad();
 
 /* AUTHENTICATION HELPER */
 
@@ -207,6 +207,16 @@ switch ($page) {
     case 'admin-messages':
         $controller = new AdminController();
         $controller->messages();
+        break;
+
+    case 'admin-message-view':
+        $controller = new AdminController();
+        $controller->viewMessage();
+        break;
+
+    case 'admin-message-read':
+        $controller = new AdminController();
+        $controller->markMessageRead();
         break;
 
     case 'admin-invoices':

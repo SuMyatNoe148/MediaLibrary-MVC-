@@ -1002,3 +1002,97 @@ input[type="file"]:hover {
     border-radius: 4px;
     font-size: 13px;
 }
+
+/* =========================
+   ADMIN MOBILE RESPONSIVE
+   ========================= */
+
+@media (max-width: 768px) {
+
+    /* Admin page wrapper padding */
+    .admin-messages-dashboard,
+    .admin-section,
+    [class*="admin-"] { padding: 12px !important; }
+
+    /* Stats grid: 2 columns on tablet */
+    .admin-stats,
+    .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+    /* Quick actions wrap */
+    .quick-actions { gap: 10px; }
+    .quick-actions a,
+    .quick-actions button { flex: 1 1 calc(50% - 10px); justify-content: center; }
+
+    /* Dashboard header */
+    .admin-header,
+    .dashboard-header { padding: 16px !important; }
+
+    /* Toolbar: stack filter + buttons */
+    .toolbar { flex-direction: column; align-items: stretch; }
+    .filter-form { flex-wrap: wrap; }
+    .filter-form select { flex: 1; }
+
+    /* All admin tables: horizontal scroll */
+    .admin-table,
+    .admin-messages-table,
+    .admin-reservations-table,
+    table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        white-space: nowrap;
+    }
+
+    /* Admin table cells */
+    .admin-table th,
+    .admin-table td { padding: 10px 8px; font-size: 13px; }
+
+    /* Messages page filter */
+    .filter-section .filter-row { flex-direction: column; }
+    .filter-section select { width: 100%; }
+
+    /* Message detail meta: stack vertically */
+    .msg-detail-meta { grid-template-columns: 1fr !important; }
+    .msg-detail-meta-item { border-right: none !important; border-bottom: 1px solid #e9ecef; }
+
+    /* Message detail fields */
+    .msg-field-row { grid-template-columns: 110px 1fr; }
+
+    /* Buttons: full width on mobile */
+    .btn-primary,
+    .btn-secondary { width: 100%; justify-content: center; box-sizing: border-box; }
+
+    /* Media grid: 1 column */
+    .media-grid { grid-template-columns: 1fr !important; }
+
+    /* Form rows: stack */
+    .form-row { grid-template-columns: 1fr !important; }
+
+    /* Modal */
+    .modal-content { width: 95%; margin: 10% auto; }
+
+    /* Notification dropdown */
+    .notification-dropdown { width: 300px; right: -10px; }
+
+    /* Activity list */
+    .activity-item { flex-direction: column; gap: 6px; }
+    .activity-time { min-width: auto; }
+}
+
+@media (max-width: 480px) {
+
+    .admin-stats,
+    .stats-grid { grid-template-columns: 1fr !important; }
+
+    .quick-actions a,
+    .quick-actions button { flex: 1 1 100%; }
+
+    .stat-card { padding: 14px; }
+    .stat-info h3 { font-size: 24px; }
+
+    .msg-detail-header-bar { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .msg-detail-subject { font-size: 1rem; }
+
+    .msg-field-row { grid-template-columns: 1fr; }
+    .msg-field-key { border-right: none; border-bottom: 1px solid #e9ecef; }
+}

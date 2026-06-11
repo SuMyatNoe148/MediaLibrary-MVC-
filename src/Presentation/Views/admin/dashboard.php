@@ -73,25 +73,13 @@
                     <?= IconHelper::fileText('nav-icon-small') ?>
                     Invoice Management
                 </a>
-            </div>
-        </div>
-
-        <!-- Mail Notifications -->
-        <div class="admin-section">
-            <h2>Mail Notifications</h2>
-            <div class="mail-notifications">
-                <?php if (empty($stats['unread_messages'])): ?>
-                    <p>No new messages.</p>
-                <?php else: ?>
-                    <div class="notification-summary">
-                        <span class="notification-count"><?= $stats['unread_messages'] ?></span>
-                        <span>new message<?= $stats['unread_messages'] > 1 ? 's' : '' ?></span>
-                    </div>
-                    <a href="index.php?page=admin-messages" class="admin-btn" style="margin-top: 15px;">
-                        <?= IconHelper::mail('nav-icon-small') ?>
-                        View Messages
-                    </a>
-                <?php endif; ?>
+                <a href="index.php?page=admin-messages" class="admin-btn">
+                    <?= IconHelper::mail('nav-icon-small') ?>
+                    Mail Management
+                    <?php if (!empty($stats['unread_messages'])): ?>
+                        <span class="badge"><?= $stats['unread_messages'] ?></span>
+                    <?php endif; ?>
+                </a>
             </div>
         </div>
 

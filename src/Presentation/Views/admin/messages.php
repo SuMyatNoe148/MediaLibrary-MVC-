@@ -19,9 +19,9 @@
                         <option value="read" <?= (($_GET['filter'] ?? '') === 'read' ? 'selected' : '') ?>>Read Only</option>
                     </select>
                 </div>
-                <div class="filter-group">
-                    <button type="submit" class="btn-back" style="margin-top: 0; background: #3498db;">Filter</button>
-                    <a href="index.php?page=admin-messages" class="btn-back" style="margin-left: 10px;">Clear</a>
+                <div class="filter-group filter-actions">
+                    <button type="submit" class="btn-primary">Filter</button>
+                    <a href="index.php?page=admin-messages" class="btn-secondary">Clear</a>
                 </div>
             </div>
         </form>
@@ -44,23 +44,29 @@
                         <th>Message</th>
                         <th>Status</th>
                         <th>Date</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($messages as $message): ?>
+                    <?php foreach ($messages as $message):
+                        $msgId = $message['message_id'] ?? $message['id'] ?? 0;
+                    ?>
                         <tr class="<?= ($message['is_read'] ?? 0) == 0 ? 'unread' : '' ?>">
-                            <td><?= $message['message_id'] ?></td>
+                            <td><?= $msgId ?></td>
                             <td><?= htmlspecialchars($message['username'] ?? 'Unknown') ?></td>
                             <td class="message-subject"><?= htmlspecialchars($message['subject'] ?? 'No Subject') ?></td>
-                            <td class="message-preview"><?= htmlspecialchars($message['message'] ?? '') ?></td>
+                            <td class="message-preview"><?= htmlspecialchars(substr($message['message'] ?? '', 0, 60)) ?>...</td>
                             <td>
                                 <?php if (($message['is_read'] ?? 0) == 0): ?>
-                                    <span style="color: #e74c3c; font-weight: 600;">Unread</span>
+                                    <span class="status-unread">Unread</span>
                                 <?php else: ?>
-                                    <span style="color: #27ae60;">Read</span>
+                                    <span class="status-read">Read</span>
                                 <?php endif; ?>
                             </td>
                             <td><?= date('M j, Y g:i A', strtotime($message['created_at'])) ?></td>
+                            <td>
+                                <a href="index.php?page=admin-message-view&id=<?= $msgId ?>" class="btn-primary btn-sm">View</a>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -68,5 +74,6 @@
         </div>
     <?php endif; ?>
 </div>
+
 
 <?php require_once BASE_PATH . '/src/Presentation/Views/layout/footer.php'; ?>

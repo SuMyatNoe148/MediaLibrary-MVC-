@@ -3,7 +3,7 @@
 <div class="section page">
     <div class="wrapper">
 
-        <h1>Suggest a median items</h1>
+        <h1>Suggest a Media Item</h1>
         <br><br>
         <?php
         if (isset($_GET["status"]) && $_GET["status"] == "thanks") 

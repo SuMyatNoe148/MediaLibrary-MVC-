@@ -2,9 +2,9 @@
 
 namespace MediaLibrary\Presentation\Controllers;
 
-use MediaLibrary\Application\Services\AdminService;
-use MediaLibrary\Application\Services\ReservationService;
-use MediaLibrary\Application\Services\InvoiceService;
+use MediaLibrary\Identity\Application\Services\AdminService;
+use MediaLibrary\Reservation\Application\Services\ReservationService;
+use MediaLibrary\Payment\Application\Services\InvoiceService;
 
 /**
  * Admin Dashboard Controller
@@ -364,7 +364,7 @@ class AdminController
                     
                     // Send notification based on status change
                     try {
-                        $notificationService = new \MediaLibrary\Application\Services\NotificationService();
+                        $notificationService = new \MediaLibrary\Notification\Application\Services\NotificationService();
                         $reservation = $this->reservationService->getReservationById($reservationId);
                         
                         if ($reservation) {
@@ -412,10 +412,42 @@ class AdminController
         $section = null;
         $hideSearch = true;
 
-        // Get all messages
-        $messages = $this->adminService->getAllMessages();
+        $filter = $_GET['filter'] ?? '';
+        $messages = $this->adminService->getAllMessages($filter);
 
         require BASE_PATH . '/src/Presentation/Views/admin/messages.php';
+    }
+
+    public function viewMessage(): void
+    {
+        $this->requireAdmin();
+        $pageTitle = 'Message Detail';
+        $section = null;
+        $hideSearch = true;
+        $id = (int)($_GET['id'] ?? 0);
+        if ($id <= 0) {
+            header('Location: index.php?page=admin-messages');
+            exit;
+        }
+        $message = $this->adminService->getMessage($id);
+        if (!$message) {
+            header('Location: index.php?page=admin-messages');
+            exit;
+        }
+        $this->adminService->markMessageRead($id);
+        require BASE_PATH . '/src/Presentation/Views/admin/message-detail.php';
+    }
+
+    public function markMessageRead(): void
+    {
+        $this->requireAdmin();
+        $id = (int)($_GET['id'] ?? 0);
+        if ($id > 0) {
+            $this->adminService->markMessageRead($id);
+        }
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true]);
+        exit;
     }
 
     /**

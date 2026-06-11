@@ -2,7 +2,7 @@
 
 namespace MediaLibrary\Presentation\Controllers;
 
-use MediaLibrary\Application\Services\FormatService;
+use MediaLibrary\Catalog\Application\Services\FormatService;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -18,6 +18,52 @@ class SuggestController
     {
         // Inject format service dependency
         $this->formatService = $formatService;
+    }
+
+    private function saveToMessages(array $data): void
+    {
+        try {
+            $db = \Database::getConnection();
+
+            $subject = 'Media Suggestion: ' . $data['title'] . ' (' . ucfirst($data['category']) . ')';
+            $body = "From: {$data['name']} <{$data['email']}>"
+                . "\nCategory: {$data['category']}"
+                . "\nTitle: {$data['title']}"
+                . "\nFormat: {$data['format']}"
+                . "\nGenre: {$data['genre']}"
+                . "\nYear: {$data['year']}"
+                . "\nDetails: {$data['details']}";
+
+            // Find sender user_id by email if they are logged in
+            $userId = null;
+            if (!empty($data['email'])) {
+                $uStmt = $db->prepare("SELECT user_id FROM Users WHERE email = ? LIMIT 1");
+                $uStmt->execute([$data['email']]);
+                $u = $uStmt->fetch(\PDO::FETCH_ASSOC);
+                if ($u) $userId = $u['user_id'];
+            }
+
+            $stmt = $db->prepare(
+                "INSERT INTO Messages (user_id, name, email, subject, message, is_read) VALUES (:user_id, :name, :email, :subject, :message, 0)"
+            );
+            $stmt->execute([
+                ':user_id' => $userId,
+                ':name'    => $data['name'],
+                ':email'   => $data['email'],
+                ':subject' => $subject,
+                ':message' => $body,
+            ]);
+
+            // Notify admin via bell notification
+            $adminStmt = $db->query("SELECT user_id FROM Users WHERE is_admin = 1 LIMIT 1");
+            $admin = $adminStmt->fetch(\PDO::FETCH_ASSOC);
+            if ($admin) {
+                $notif = new \MediaLibrary\Notification\Application\Services\NotificationService();
+                $notif->notifyNewSuggestion((int)$admin['user_id'], $data['name'], $data['title']);
+            }
+        } catch (\Exception $e) {
+            error_log('SuggestController::saveToMessages failed: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
+        }
     }
 
     // Display suggestion form page
@@ -130,15 +176,21 @@ class SuggestController
         $mail->Subject = 'Library Suggestion from: ' . $data['name'];
         $mail->Body    = $email_body;
 
+        // Always save to Messages table so admin sees it
+        $this->saveToMessages($data);
+
         // Send email and redirect on success
-        if ($mail->send()) {
-            header("Location: index.php?page=suggest&status=thanks");
-            exit;
+        try {
+            if ($mail->send()) {
+                header("Location: index.php?page=suggest&status=thanks");
+                exit;
+            }
+        } catch (Exception $e) {
+            // Email failed but message is saved — still redirect
         }
 
-        // Return mail error if sending fails
-        $data['error_message'] = 'Mailer Error: ' . $mail->ErrorInfo;
-
-        return $data;
+        // Redirect regardless of email result
+        header("Location: index.php?page=suggest&status=thanks");
+        exit;
     }
 }

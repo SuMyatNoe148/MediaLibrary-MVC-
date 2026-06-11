@@ -9,6 +9,7 @@ require_once BASE_PATH . '/src/Presentation/Views/partials/icons.php';
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($pageTitle ?? 'Media Library') ?></title>
 
     <link rel="stylesheet" href="Public/assets/css/style.css">
@@ -34,8 +35,13 @@ require_once BASE_PATH . '/src/Presentation/Views/partials/icons.php';
             </a>
         </h1>
 
+        <!-- HAMBURGER (mobile only) -->
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </button>
+
         <!-- NAVIGATION -->
-        <ul class="nav">
+        <ul class="nav" id="mainNav">
             <li class="<?= ($section === 'books') ? 'on' : '' ?>">
                 <a href="index.php?page=catalog&cat=books">
                     <?= IconHelper::book('nav-icon') ?> Books
@@ -87,7 +93,7 @@ require_once BASE_PATH . '/src/Presentation/Views/partials/icons.php';
                 <div class="user-menu">
                     <a href="index.php?page=profile" class="user-link">
                         <?= IconHelper::user('nav-icon-small') ?>
-                        <span><?= htmlspecialchars($_SESSION['username']) ?></span>
+                        <span><?= htmlspecialchars($_SESSION['username'] ?? '') ?></span>
                     </a>
                     <div class="user-dropdown">
                         <a href="index.php?page=profile"><?= IconHelper::settings('nav-icon-small') ?> Profile</a>
@@ -130,5 +136,18 @@ require_once BASE_PATH . '/src/Presentation/Views/partials/icons.php';
     </div>
 </div>
 <?php endif; ?>
+
+<script>
+(function(){
+    var btn = document.getElementById('hamburger');
+    var nav = document.getElementById('mainNav');
+    if (btn && nav) {
+        btn.addEventListener('click', function(){
+            nav.classList.toggle('nav-open');
+            btn.classList.toggle('is-open');
+        });
+    }
+})();
+</script>
 
 <main id="content">
